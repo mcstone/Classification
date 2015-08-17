@@ -7,7 +7,7 @@
 <script src="./js/d3/d3.v3.min.js"></script>
 <script src="./js/d3/topojson.v1.min.js"></script>
 <script src="./js/d3/queue.v1.min.js"></script>
-<script src="./js/classification_v3.js"></script>
+<script src="./js/classification.js"></script>
 <script type="text/javascript" src="./js/geostats.js"></script>
 <script type="text/javascript" src="./js/simple_statistics.js"></script>
 
@@ -17,6 +17,8 @@
 </head>
 <div class="dots">
 </div>
+<div class="boxplot">
+</div>
 <div class="map">
 	<div class="histogram"></div>
 </div>
@@ -24,9 +26,10 @@
 <div class="controls">
 Set color scheme:
 <div>
-    <select name="colorScheme" class="colorScheme">
-      <option value="YlGn">YlGn</option>
+    <select name="colorScheme" class="colorScheme" id="colorScheme">
+      <option value="Single">Single Color</option>
       <option selected value="YlGnBu">YlGnBu</option>
+      <option value="YlGn">YlGn</option>
       <option value="GnBu">GnBu</option>
       <option value="BuGn">BuGn</option>
       <option value="PuBuGn">PuBuGn</option>
@@ -57,23 +60,24 @@ Set color scheme:
   <br><br>
   Set number of classes:
 <div class="legendClassNo">
-  <select name="numberClasses" class="numberClasses" >
+  <select name="numberClasses" class="numberClasses" id="numberClasses">
+      <option value="-1">No class breaks set</option>
       <option value="3">3</option>
       <option value="4">4</option>
-        <option value="5" selected>5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
+      <option selected value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
       </select>
 </div>
   <br><br>
   Set classification scheme:
 <div class="classSchemeSelect">
-  <select name="schemeSelect" class="classScheme">
-      <option value="EqualInterval">Equal Interval</option>
+  <select name="schemeSelect" class="classScheme" id="classScheme" >
+      <option value="null">No classification scheme set</option>
+      <option selected value="EqualInterval">Equal Interval</option>
       <option value="Jenks">Jenks</option>
-      <option value="Geometric">Geometric Interval</option>
       <option value="Quantile">Quantile</option>
   </select>
 
