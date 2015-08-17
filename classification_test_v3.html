@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+<script src="./js/d3/d3.v3.min.js"></script>
+<script src="./js/d3/topojson.v1.min.js"></script>
+<script src="./js/d3/queue.v1.min.js"></script>
+<script src="./js/classification_v3.js"></script>
+<script type="text/javascript" src="./js/geostats.js"></script>
+<script type="text/javascript" src="./js/simple_statistics.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/layout.css" />
+<link rel="stylesheet" type="text/css" href="css/colorbrewer.css" />
+
+</head>
+<div class="dots">
+</div>
+<div class="map">
+	<div class="histogram"></div>
+</div>
+
+<div class="controls">
+Set color scheme:
+<div>
+    <select name="colorScheme" class="colorScheme">
+      <option value="YlGn">YlGn</option>
+      <option selected value="YlGnBu">YlGnBu</option>
+      <option value="GnBu">GnBu</option>
+      <option value="BuGn">BuGn</option>
+      <option value="PuBuGn">PuBuGn</option>
+      <option value="PuBu">PuBu</option>
+      <option value="BuPu">BuPu</option>
+      <option value="RdPu">RdPu</option>
+      <option value="PuRd">PuRd</option>
+      <option value="OrRd">OrRd</option>
+      <option value="YlOrRd">YlOrRd</option>
+      <option value="YlOrBr">YlOrBr</option>
+      <option value="Purples">Purples</option>
+      <option value="Blues">Blues</option>
+      <option value="Greens">Greens</option>
+      <option value="Oranges">Oranges</option>
+      <option value="Reds">Reds</option>
+      <option value="Greys">Greys</option>
+      <!-- <option value="PuOr">PuOr</option>
+      <option value="BrBG">BrBG</option>
+      <option value="PRGn">PRGn</option>
+      <option value="PiYG">PiYG</option>
+      <option value="RdBu">RdBu</option>
+      <option value="RdGy">RdGy</option>
+      <option value="RdYlBu">RdYlBu</option>
+      <option value="Spectral">Spectral</option>
+      <option value="RdYlGn">RdYlGn</option> -->
+    </select>
+</div>
+  <br><br>
+  Set number of classes:
+<div class="legendClassNo">
+  <select name="numberClasses" class="numberClasses" >
+      <option value="3">3</option>
+      <option value="4">4</option>
+        <option value="5" selected>5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+      </select>
+</div>
+  <br><br>
+  Set classification scheme:
+<div class="classSchemeSelect">
+  <select name="schemeSelect" class="classScheme">
+      <option value="EqualInterval">Equal Interval</option>
+      <option value="Jenks">Jenks</option>
+      <option value="Geometric">Geometric Interval</option>
+      <option value="Quantile">Quantile</option>
+  </select>
+
+</div>
+  <br><br>
+  Set data field to map:
+ <div class="dataField">
+  <select name="fieldSelect" class="fieldSelect">
+      <option value="rate">Unemployment Rate</option>
+      <option value="linear">Linear - random</option>
+      <option value="gaussian">Gaussian - random</option>
+      <option value="random">Random</option>
+      <option value="outliers">Outliers</option>
+      <option value="bigGap">Big Gap</option>
+      <option value="range350">Range to 350</option>
+      <option value="range750up">Range 750+</option>   
+      <option value="gamma2.2">Gamma 2.2</option>
+      <option value="gamma.45">Gamma .45</option>      
+  </select>
+
+</div>
+</div>
+
+</html>

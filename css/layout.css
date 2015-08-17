@@ -1,0 +1,54 @@
+@charset "utf-8";
+/* CSS Document */
+div{
+    outline:dashed;
+    outline-width:thin;
+}
+
+.dots{
+	float:left;
+	width: 20px;
+	height: 500px;
+}
+
+.histogram{
+  position: absolute;
+  left: 650px;
+  top: 400px;
+  width: 170px;
+  height: 100px;
+}
+
+.map{
+  float: left;
+  width: 800px;
+  height: 500px;
+}
+
+.controls{
+  position: absolute;
+  left: 850px;
+  width: 100px;
+}
+
+/* Default map fill styles */
+.land {
+  fill: #aaa;
+}
+
+.counties {
+  fill: none;
+}
+
+.states {
+  fill: none;
+  stroke: #bbb;
+  stroke-width: 1.5px;
+  stroke-linejoin: round;
+}
+
+/* Default histogram styles */
+.bars{
+  stroke: #000;
+  stroke-width: 1px;
+}
