@@ -15,6 +15,7 @@
 <link rel="stylesheet" type="text/css" href="css/colorbrewer.css" />
 
 </head>
+<div class = "master">
 <div class="dots">
 </div>
 <div class="boxplot">
@@ -27,7 +28,7 @@
 Set color scheme:
 <div>
     <select name="colorScheme" class="colorScheme" id="colorScheme">
-      <option value="Single">Single Color</option>
+      <!--<option value="Single">Single Color</option>-->
       <option selected value="YlGnBu">YlGnBu</option>
       <option value="YlGn">YlGn</option>
       <option value="GnBu">GnBu</option>
@@ -61,7 +62,7 @@ Set color scheme:
   Set number of classes:
 <div class="legendClassNo">
   <select name="numberClasses" class="numberClasses" id="numberClasses">
-      <option value="-1">No class breaks set</option>
+      <!--<option value="-1">No class breaks set</option>-->
       <option value="3">3</option>
       <option value="4">4</option>
       <option selected value="5">5</option>
@@ -75,7 +76,7 @@ Set color scheme:
   Set classification scheme:
 <div class="classSchemeSelect">
   <select name="schemeSelect" class="classScheme" id="classScheme" >
-      <option value="null">No classification scheme set</option>
+      <!--<option value="null">No classification scheme set</option>-->
       <option selected value="EqualInterval">Equal Interval</option>
       <option value="Jenks">Jenks</option>
       <option value="Quantile">Quantile</option>
@@ -95,10 +96,22 @@ Set color scheme:
       <option value="range350">Range to 350</option>
       <option value="range750up">Range 750+</option>   
       <option value="gamma2.2">Gamma 2.2</option>
-      <option value="gamma.45">Gamma .45</option>      
+      <option value="gamma.45">Gamma .45</option>
+      <option value="FIPS">FIPS</option>
   </select>
+ </div>
+<br><br>
+    Set histogram data:
+    <div>
+        <select name="histogramType" class="histogramType">
+            <option selected value="byCount">Count of polygons</option>
+            <option value="byArea">Sum of area</option>
+        </select>
 
+    </div>
 </div>
 </div>
+
+<!--<div class="areaHistogram"></div>-->
 
 </html>

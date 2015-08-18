@@ -13,6 +13,11 @@ div{
 
 }
 
+.dotLine{
+  stroke:#666;
+  stroke-width: 1px;
+}
+
 .boxplot{
   float:left;
   width: 30px;
@@ -21,14 +26,16 @@ div{
 
 .histogram{
   position: absolute;
-  left: 680px;
+  left: 620px;
   top: 400px;
   width: 170px;
   height: 100px;
 }
 
 .map{
-  float: left;
+  position: absolute;
+  left: 50px;
+  top: 0px;
   width: 800px;
   height: 500px;
 }
@@ -83,8 +90,12 @@ div.tooltip {
   fill: none;
 }
 
-.dotLine{
-  stroke:#666;
-  stroke-width: 1px;
-
-}
+/*.areaHistogram{*/
+  /*position: absolute;*/
+  /*left: 725px;*/
+  /*top: 520px;*/
+  /*outline: dashed;*/
+  /*outline-width: thin;*/
+  /*height: 100px;*/
+  /*width: 170px;*/
+/*}*/
