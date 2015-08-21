@@ -23,8 +23,8 @@ var fillColor = "#666";
 
 /////////////////********************//////////////////
 queue()
-    .defer(d3.tsv, "data/all_data.tsv")
-    .defer(d3.json, "data/us.json") // map data
+    .defer(d3.tsv, "data/all_data_noAKHI.tsv")
+    .defer(d3.json, "data/us_noAKHI.json") // map data
     .await(ready);
 
 function ready(error, mapAtts, mapData) {
