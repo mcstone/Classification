@@ -90,6 +90,13 @@ div.tooltip {
   fill: none;
 }
 
+.highOutlier{
+  fill:#f00;
+}
+
+.lowOutlier{
+  fill:#00f;
+}
 /*.areaHistogram{*/
   /*position: absolute;*/
   /*left: 725px;*/

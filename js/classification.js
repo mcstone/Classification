@@ -1,11 +1,8 @@
-// TODO - figure out how to deal with AK and HI in the area calculations - currently using actual areas, and scale is off on AK and HI, so throws counts
-// I will possibly just remove AK and HI from the file since they make the calculations a beast and I don't know the scale that they were set to in the GeoJSON
-// TODO - if the drop downs are changed to a "default" set all to null / single color
 // TODO - add tooltip to histogram - currently just logs to console
 // TODO - make this way more efficient...
 
 // Data details
-var dataByID = [];
+var dataByID = {}; // associative array (use FIPS as key)
 var dataDomain = [];
 var rawData;
 var rawMapData;
@@ -20,6 +17,7 @@ var classBreaks = [];
 var extendedClassBreaks = []; // for splitting bars in histogram
 var numberClassDivisions = 1; // split bars in histogram into finer segments within each class
 var fillColor = "#666";
+var lowOutlierThreshold, highOutlierThreshold;
 
 /////////////////********************//////////////////
 queue()
@@ -29,9 +27,9 @@ queue()
 
 function ready(error, mapAtts, mapData) {
     //Set all drop downs to defaults
-    document.getElementById("numberClasses").selectedIndex = 3;
-    document.getElementById("classScheme").selectedIndex = 1;
-    document.getElementById("colorScheme").selectedIndex = 1;
+    document.getElementById("numberClasses").selectedIndex = 2;
+    document.getElementById("classScheme").selectedIndex = 0;
+    document.getElementById("colorScheme").selectedIndex = 0;
 
     console.log("Initializing data and view...");
     console.log("Working with the attribute: " + attribute);
@@ -41,6 +39,7 @@ function ready(error, mapAtts, mapData) {
     rawMapData = mapData;
     rawData = mapAtts;
     set_value_domain(rawData);
+    classBreaks = get_class_breaks(classScheme, numberOfClasses, dataDomain);
 
     draw_counties(mapData);
     classify_map();
@@ -48,13 +47,11 @@ function ready(error, mapAtts, mapData) {
     draw_dots(mapData);
     classify_dots();
 
-    classBreaks = get_class_breaks(classScheme, numberOfClasses);
     if(histoType=="area"){
         draw_histogram(get_area_totals(), colorScheme);
     } else {
         draw_histogram(get_class_counts(), colorScheme);
     }
-    //draw_histogram(get_class_counts(), colorScheme); // no color scheme...
 
     draw_boxplot();
 
@@ -297,7 +294,6 @@ function print_class_breaks() {
 // Output: None - just sets the style for the counties to designated fill color based on attribute
 function classify_map() {
     console.log("Classifying map...");
-    classBreaks = get_class_breaks(classScheme, numberOfClasses);
     counties.style("fill", null)
         .attr("class", function (d) {
             var cl = get_class(dataByID[d.id], classBreaks) - 1;
@@ -313,7 +309,6 @@ function classify_dots(){
             return "dots " + colorScheme + "q" + cl + "-" + (classBreaks.length - 1);
         });
 }
-
 
 // Input: maximum height (from SVG), data value, and max/min values for the entire dataset to set the range
 // Output: scaled height value in pixels
@@ -355,7 +350,6 @@ function get_class_counts() {
     }
 
     // get breaks for sub-classes (when binsPerClass > 1)
-    //if (numberClassDivisions > 1){
     // create new breaks in-between
     for (var i = 0; i < classBreaks.length - 1; i++) {
         var binSlice = (classBreaks[i + 1] - classBreaks[i]) / numberClassDivisions;
@@ -364,7 +358,6 @@ function get_class_counts() {
         }
     }
     extendedClasses.push(classBreaks[classBreaks.length - 1]);
-    //console.log("Bins greater than 1", extendedClasses);
 
     // classify and count
     for (var i = 0; i < dataDomain.length; i++) {
@@ -400,7 +393,7 @@ function get_area_totals() {
 
 // Input: 
 // Output: array of class breaks (c) - length of number of classes + 1 (min value, class1 high value, class2 high value... classN high value)
-function get_class_breaks(s, n) {
+function get_class_breaks(s, n, data) {
     console.log("Setting class breaks...");
 
     if (n <= 2 || n >= 10) {
@@ -408,13 +401,13 @@ function get_class_breaks(s, n) {
         return;
     }
 // setup for using the geostats.js library for classification
-    gsData = new geostats(dataDomain);
+    gsData = new geostats(data);
 
 // grab classbreaks using geostats.js library
     switch (s) {
         case "Jenks":
+            console.log("jenks");
             c = gsData.getClassJenks(n);
-            //c = ss.jenks(dataDomain, numberOfClasses);  // tried using script from simple_statistics (copied at end) but it also choked.
             break;
         case "EqualInterval":
             c = gsData.getClassEqInterval(n);
@@ -440,7 +433,7 @@ function classify() {
         return;
     }
 
-    classBreaks = get_class_breaks(classScheme, numberOfClasses);
+    classBreaks = get_class_breaks(classScheme, numberOfClasses, dataDomain);
     if (classBreaks) {
         console.log("Classifying data (" + attribute + ") using " + classScheme + " with " + numberOfClasses + " class breaks");
         classify_map();
@@ -453,17 +446,15 @@ function classify() {
             draw_histogram(get_class_counts(), colorScheme);
         }
 
-
         print_class_breaks();
     }
 }
 
 function set_value_domain(mapAtts) {
-    dataByID = [];
     dataDomain = [];
 
     mapAtts.forEach(function (d, i) {
-        dataByID[d.id] = +parseFloat(d[attribute]); // value and FIPS code
+        dataByID[d.id] = parseFloat(d[attribute]);
         if (d[attribute]) {
             dataDomain.push(parseFloat(d[attribute]));	//removing the "" null values to make classification work cleanly
         }
@@ -476,7 +467,6 @@ function set_fill_single_color(obj, fillColor) {
     console.log("Setting " + obj + " to one color of " + fillColor);
     // can input hex or rgb as "rgb(34,94,168)"
     d3.selectAll("." + obj).style("fill", fillColor);
-
 }
 
 function set_number_breaks(n) {
@@ -550,7 +540,8 @@ function set_histogram_type(type){
     }
 }
 
-function set_to_single_color(){
+function set_to_single_color(color){
+    fillColor = color;
     numberOfClasses = -1;
     document.getElementById("numberClasses").selectedIndex = 0;
     colorScheme = "null";
@@ -663,8 +654,15 @@ function draw_boxplot(){
     //console.log("Low whisker: " + lowBar);
     //console.log("High whisker: " + highBar);
     //console.log("Low outliers: " + lowOutliers);
+    if (lowOutliers.length > 0){
+        lowOutlierThreshold = Math.max.apply(Math, lowOutliers);
+        console.log("Highest low outlier: " + lowOutlierThreshold);
+    } else lowOutlierThreshold = Math.min.apply(Math, dataSort);
     //console.log("High outliers: " + highOutliers);
-
+    if (highOutliers.length > 0){
+        highOutlierThreshold = Math.min.apply(Math, highOutliers);
+        console.log("Lowest high outlier: " + highOutlierThreshold);
+    } else highOutlierThreshold = Math.max.apply(Math, dataSort);
     function median(values) {
         values.sort( function(a,b) {return a - b;} );
 
@@ -675,6 +673,33 @@ function draw_boxplot(){
         else
             return (values[half-1] + values[half]) / 2.0;
     }
+}
+
+function set_outliers(){
+
+    // for key in dataByID - if dataByID[key] < lowOutlierThreshold - outlier... if > highOutlierThreshold - outlier
+
+    for (var key in dataByID){
+        var value = dataByID[key]
+        if (value >= highOutlierThreshold){
+            d3.select(".counties").select("#_" + key).attr("class", "counties highOutlier");
+        }
+        if (value <= lowOutlierThreshold){
+            d3.select(".counties").select("#_" + key).attr("class", "counties lowOutlier")
+        }
+    }
+}
+
+// make a new domain array for just the values that are "not outliers"
+// to use in applying classification to the "non outliers" and the "outliers" separately
+function create_constrained_domain(){
+    constrained_domain = [];
+    for(var i in dataDomain){
+        if (dataDomain[i] > lowOutlierThreshold && dataDomain[i] < highOutlierThreshold){
+            constrained_domain.push(dataDomain[i]);
+        }
+    }
+    return constrained_domain;
 }
 
 //function draw_area_histogram(classCounts, colorScheme) {
